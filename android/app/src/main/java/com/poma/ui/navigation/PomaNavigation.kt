@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.poma.ui.screens.HomeScreen
 import com.poma.ui.screens.BookmarksScreen
 import com.poma.ui.screens.SettingsScreen
+import com.poma.ui.screens.LoginScreen
 
 @Composable
 fun PomaNavigation() {
@@ -14,8 +15,12 @@ fun PomaNavigation() {
     
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = "login" // 从登录页面开始
     ) {
+        composable("login") {
+            LoginScreen(navController = navController)
+        }
+        
         composable("home") {
             HomeScreen(navController = navController)
         }

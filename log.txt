@@ -2,6 +2,8 @@
 
 ## 2025-08-25 - 项目启动
 
+### 14:30 - 需求分析和产品定位
+
 ### 产品定位确定
 - 定位：播客版的 Kindle Highlights，不做播放器，而是做现有平台的"书签层"
 - 目标场景：跑步、通勤等移动场景的 casual listening
@@ -24,7 +26,7 @@
 - Phase 2：AI 上下文捕获 → 内容总结 → 周期性回顾
 - Phase 3：多平台支持 → 可视化统计
 
-### 项目结构搭建完成
+### 15:45 - 项目结构搭建完成
 - 创建完整的前后端分离架构
 - Android 客户端：Kotlin + Jetpack Compose + Navigation
 - 后端：FastAPI + PostgreSQL + Redis
@@ -38,6 +40,34 @@
   - /bookmarks：书签管理
 - 硬件集成支持：Quick Tap、Pixel Buds Pro 长按手势
 
-### 设备信息更正
+### 16:15 - 设备信息更正
 - 耳机设备：Pixel Buds Pro（非 Pro 2）
 - 已更新所有相关文档和代码注释
+
+### 16:20 - Android 架构说明和登录方式设计
+- 创建详细的 Android 架构文档 (MVVM + Clean Architecture)
+- 确定登录认证方案：
+  - 主要方式：Google 登录 (适合 Pixel 用户) + 邮箱密码登录
+  - 扩展方式：Spotify 直接登录 (未来)
+  - 技术实现：JWT Token + EncryptedSharedPreferences
+  - 安全设计：HTTPS + Certificate Pinning
+
+### 16:25 - Google 登录设置评估
+- Google 登录设置时间评估：约30-60分钟
+- 主要步骤简单，无复杂配置
+
+### 16:40 - Google 登录代码实现完成
+- Android 端：
+  - 添加 Google Sign-In 依赖和插件
+  - 创建 LoginScreen 登录界面
+  - 实现 AuthViewModel 状态管理
+  - 更新导航从登录页面开始
+- 后端：
+  - 添加 google-auth 依赖
+  - 实现 /api/v1/auth/google 登录接口
+  - Google ID Token 验证逻辑
+  - JWT Token 生成和返回
+- 配置文件：
+  - google-services.json 模板
+  - 环境变量配置示例
+- 下一步：需要 Google Cloud Console 配置才能测试

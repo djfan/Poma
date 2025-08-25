@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     # OpenAI 配置
     OPENAI_API_KEY: Optional[str] = None
     
+    # Google OAuth 配置
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    
     # 应用配置
     DEBUG: bool = True
     API_V1_STR: str = "/api/v1"

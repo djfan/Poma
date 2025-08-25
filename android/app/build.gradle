@@ -80,6 +80,9 @@ dependencies {
     // 音频录制
     implementation 'androidx.media:media:1.7.0'
     
+    // Google Sign-In
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    
     // 测试依赖
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -89,3 +92,5 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
+
+apply plugin: 'com.google.gms.google-services'
