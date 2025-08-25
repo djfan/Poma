@@ -3,7 +3,7 @@
 > The Kindle Highlights for Podcasts - powered by your earbuds.
 
 Poma 是一个轻量级的播客笔记工具，让用户在跑步、通勤等移动场景下能够：
-- 通过 Pixel Buds 耳机一键触发语音笔记
+- 通过 Pixel Buds Pro 耳机一键触发语音笔记
 - 自动关联到正在播放的播客时间戳  
 - 像 Kindle highlights 一样回顾这些笔记
 
@@ -38,7 +38,7 @@ Poma 是一个轻量级的播客笔记工具，让用户在跑步、通勤等移
 
 ## 硬件集成
 
-- **Pixel Buds Pro 2**: 长按手势触发笔记
+- **Pixel Buds Pro**: 长按手势触发笔记
 - **Pixel 7a**: Quick Tap (背部双击) 备选触发
 - **Android 系统**: Quick Settings Tile, 通知栏快捷操作
 

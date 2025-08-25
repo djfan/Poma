@@ -55,7 +55,7 @@ fun SettingsScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Quick Tap: 背部双击触发\n• Pixel Buds: 长按触发",
+                    text = "• Quick Tap: 背部双击触发\n• Pixel Buds Pro: 长按触发",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

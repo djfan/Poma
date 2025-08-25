@@ -5,10 +5,10 @@
 ### 产品定位确定
 - 定位：播客版的 Kindle Highlights，不做播放器，而是做现有平台的"书签层"
 - 目标场景：跑步、通勤等移动场景的 casual listening
-- 核心用户：Spotify + Android Pixel 7a + Pixel Buds Pro 2 用户
+- 核心用户：Spotify + Android Pixel 7a + Pixel Buds Pro 用户
 
 ### 核心功能设计
-- Pixel Buds Pro 2 长按手势触发语音笔记
+- Pixel Buds Pro 长按手势触发语音笔记
 - Pixel 手机 Quick Tap（背部双击）作为备选触发方式
 - Spotify API 集成获取播放状态和时间戳
 - 语音转文字 + AI 总结功能
@@ -36,4 +36,8 @@
   - /auth：用户认证
   - /spotify：Spotify 集成
   - /bookmarks：书签管理
-- 硬件集成支持：Quick Tap、Pixel Buds Pro 2 长按手势
+- 硬件集成支持：Quick Tap、Pixel Buds Pro 长按手势
+
+### 设备信息更正
+- 耳机设备：Pixel Buds Pro（非 Pro 2）
+- 已更新所有相关文档和代码注释

@@ -75,7 +75,7 @@ Poma/
 
 ### 硬件集成
 1. **Quick Tap**: 通过 AccessibilityService 监听背部双击
-2. **Pixel Buds**: 通过 MediaSession 监听耳机手势
+2. **Pixel Buds Pro**: 通过 MediaSession 监听耳机手势
 3. **Quick Settings Tile**: 系统下拉快捷开关
 
 ### Spotify 集成
