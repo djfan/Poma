@@ -23,3 +23,17 @@
 - Phase 1：Spotify 授权 → 播放状态获取 → 语音笔记 → 基础回顾界面
 - Phase 2：AI 上下文捕获 → 内容总结 → 周期性回顾
 - Phase 3：多平台支持 → 可视化统计
+
+### 项目结构搭建完成
+- 创建完整的前后端分离架构
+- Android 客户端：Kotlin + Jetpack Compose + Navigation
+- 后端：FastAPI + PostgreSQL + Redis
+- 关键 Android 组件：
+  - QuickBookmarkTileService：Quick Settings 快捷开关
+  - MediaListenerService：监听播放状态
+  - 三个主要页面：HomeScreen, BookmarksScreen, SettingsScreen
+- 后端 API 结构：
+  - /auth：用户认证
+  - /spotify：Spotify 集成
+  - /bookmarks：书签管理
+- 硬件集成支持：Quick Tap、Pixel Buds Pro 2 长按手势

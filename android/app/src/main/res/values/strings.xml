@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Poma</string>
+    <string name="quick_bookmark_tile_label">播客书签</string>
+    <string name="recording_notification_title">正在录制播客笔记</string>
+    <string name="recording_notification_content">点击停止录制</string>
+</resources>
