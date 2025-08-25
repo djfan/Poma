@@ -5,8 +5,10 @@
 
 echo "📱 构建 Poma Android 应用..."
 
-# 进入 Android 目录
-cd android
+# 获取脚本所在目录并进入项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT/android"
 
 # 检查 gradlew 是否存在
 if [ ! -f "gradlew" ]; then

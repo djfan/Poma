@@ -2,32 +2,40 @@
 
 ## 🚀 快速开始
 
-### 一键启动后端
+### 主控制脚本
 ```bash
-./start-backend.sh
-```
-后端将启动在：http://localhost:8001
+# 查看所有可用命令
+./poma help
 
-### 停止后端
-```bash
-./stop-backend.sh
-```
+# 开发模式 (推荐)
+./poma dev
 
-### 构建Android应用
-```bash
-./build-android.sh
+# 启动后端服务器
+./poma start-backend
+
+# 构建Android应用
+./poma build-android
+
+# 查看服务状态
+./poma status
+
+# 停止后端服务器
+./poma stop-backend
 ```
 
 ## 📁 项目结构
 ```
 Poma/
-├── start-backend.sh      # 一键启动后端脚本
-├── stop-backend.sh       # 停止后端脚本
-├── build-android.sh      # 构建Android脚本
-├── android/              # Android 客户端
-├── backend/              # Python FastAPI 后端
-├── docs/                 # 项目文档
-└── README.md            # 项目说明
+├── poma                 # 🎯 主控制脚本
+├── scripts/             # 📜 所有开发脚本
+│   ├── start-backend.sh # 启动后端脚本
+│   ├── stop-backend.sh  # 停止后端脚本
+│   └── build-android.sh # 构建Android脚本
+├── android/             # 📱 Android 客户端
+├── backend/             # 🐍 Python FastAPI 后端
+├── docs/                # 📚 项目文档
+├── DEVELOPMENT.md       # 🔧 开发指南
+└── README.md           # 📖 项目说明
 ```
 
 ## 🔧 开发环境

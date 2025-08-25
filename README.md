@@ -58,14 +58,20 @@ Poma 是一个轻量级的播客笔记工具，让用户在跑步、通勤等移
 
 ### 一键启动
 ```bash
+# 查看所有命令
+./poma help
+
 # 启动后端服务器
-./start-backend.sh
+./poma start-backend
 
 # 构建 Android 应用  
-./build-android.sh
+./poma build-android
 
-# 停止后端服务器
-./stop-backend.sh
+# 开发模式 (启动后端 + 显示文档链接)
+./poma dev
+
+# 查看服务状态
+./poma status
 ```
 
 ### 手动启动

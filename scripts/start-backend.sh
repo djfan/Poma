@@ -5,8 +5,10 @@
 
 echo "🚀 启动 Poma 后端服务器..."
 
-# 进入后端目录
-cd backend
+# 获取脚本所在目录并进入项目根目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT/backend"
 
 # 检查虚拟环境是否存在
 if [ ! -d "venv" ]; then
