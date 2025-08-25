@@ -1,0 +1,25 @@
+# Poma 项目开发日志
+
+## 2025-08-25 - 项目启动
+
+### 产品定位确定
+- 定位：播客版的 Kindle Highlights，不做播放器，而是做现有平台的"书签层"
+- 目标场景：跑步、通勤等移动场景的 casual listening
+- 核心用户：Spotify + Android Pixel 7a + Pixel Buds Pro 2 用户
+
+### 核心功能设计
+- Pixel Buds Pro 2 长按手势触发语音笔记
+- Pixel 手机 Quick Tap（背部双击）作为备选触发方式
+- Spotify API 集成获取播放状态和时间戳
+- 语音转文字 + AI 总结功能
+
+### 技术栈选择
+- 移动端：Android 原生（Kotlin + Jetpack Compose）
+- 后端：FastAPI (Python)
+- 数据库：PostgreSQL + Redis
+- AI 服务：Whisper API + GPT-4
+
+### 开发路线图
+- Phase 1：Spotify 授权 → 播放状态获取 → 语音笔记 → 基础回顾界面
+- Phase 2：AI 上下文捕获 → 内容总结 → 周期性回顾
+- Phase 3：多平台支持 → 可视化统计
