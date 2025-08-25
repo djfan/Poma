@@ -51,7 +51,7 @@ fun LoginScreen(
     // 配置 Google Sign-In
     val gso = remember {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("YOUR_WEB_CLIENT_ID") // 需要替换为实际的 Web Client ID
+            .requestIdToken("882585452174-msrfafbhd66gmsermrjl46loa9ioeet6.apps.googleusercontent.com")
             .requestEmail()
             .build()
     }

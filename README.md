@@ -54,22 +54,36 @@ Poma 是一个轻量级的播客笔记工具，让用户在跑步、通勤等移
 - FastAPI 0.104+
 - PostgreSQL 15+
 
-## 快速开始
+## 🚀 快速开始
 
+### 一键启动
 ```bash
-# 克隆项目
-git clone <repo-url>
-cd poma
+# 启动后端服务器
+./start-backend.sh
 
+# 构建 Android 应用  
+./build-android.sh
+
+# 停止后端服务器
+./stop-backend.sh
+```
+
+### 手动启动
+```bash
 # 启动后端
 cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
+source venv/bin/activate
+uvicorn app.main:app --reload --port 8001
 
 # 构建 Android 应用
 cd android
 ./gradlew assembleDebug
 ```
+
+### 访问应用
+- **后端 API**: http://localhost:8001
+- **API 文档**: http://localhost:8001/docs
+- **Android APK**: `android/app/build/outputs/apk/debug/app-debug.apk`
 
 ## 测试
 

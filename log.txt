@@ -71,3 +71,28 @@
   - google-services.json 模板
   - 环境变量配置示例
 - 下一步：需要 Google Cloud Console 配置才能测试
+
+### 16:45 - 开始 Google Cloud Console 配置
+- 准备配置 Google OAuth 2.0 凭据
+- 项目名称：POMA（大写，无影响）
+- 注意：不要启用已废弃的 Google+ API
+- 直接配置 OAuth 2.0 凭据即可
+- 跳过 API 启用，直接配置 OAuth 同意屏幕
+- 创建完整 Android 项目结构和 gradlew 文件
+- 修复 gradle-wrapper.jar 缺失问题
+- 成功获取 SHA-1 指纹：22:B0:77:DC:81:7B:C7:FF:B6:2D:30:E1:F2:D3:0A:21:2F:A0:23:82
+- 清理错误的 {app 目录，项目结构现已正常
+- 开始创建 Google OAuth 客户端（英文界面指导）
+- 更新完整的 google-signin-setup.md 文档，包含详细的英文界面操作步骤
+- 用户询问 keytool 命令获取指纹的替代方法
+- 用户下载了错误的 JSON 文件（Web 应用凭据而非 Android google-services.json）
+- 手动创建了正确格式的 google-services.json 文件
+- 更新 Android 代码和后端环境变量，配置完成
+- 用户询问 Firebase 的作用和用途
+- 确认不需要额外创建 Firebase 项目，现有配置已足够
+- 用户询问后端是否需要 Python 虚拟环境
+- 用户询问 uvicorn 命令的作用
+- 成功创建 Python 虚拟环境并安装依赖
+- 后端服务器成功启动在 http://localhost:8001
+- API 测试通过：根路径和健康检查接口正常
+- 创建一键启动后端的脚本文件
