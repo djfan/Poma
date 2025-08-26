@@ -29,6 +29,7 @@ class AuthViewModel : ViewModel() {
     private val apiService = AuthApiService() // TODO: 注入依赖
     
     fun signInWithGoogle(idToken: String) {
+        android.util.Log.d("AuthViewModel", "signInWithGoogle called with token: ${idToken.take(50)}...")
         viewModelScope.launch {
             try {
                 _authState.value = _authState.value.copy(
@@ -37,13 +38,15 @@ class AuthViewModel : ViewModel() {
                 )
                 
                 // 调用后端验证 Google Token
+                android.util.Log.d("AuthViewModel", "Sending request to backend...")
                 val response = apiService.googleSignIn(idToken)
                 
                 if (response.isSuccessful) {
+                    android.util.Log.d("AuthViewModel", "Backend response successful!")
                     val loginResponse = response.body()!!
                     
                     // 保存 JWT Token
-                    TokenManager.saveToken(loginResponse.accessToken)
+                    TokenManager.saveToken(loginResponse.access_token)
                     
                     // 更新状态
                     _authState.value = _authState.value.copy(
@@ -53,6 +56,7 @@ class AuthViewModel : ViewModel() {
                         error = ""
                     )
                 } else {
+                    android.util.Log.e("AuthViewModel", "Backend response failed: ${response.code()}")
                     _authState.value = _authState.value.copy(
                         isLoading = false,
                         error = "登录失败，请稍后重试"
@@ -60,6 +64,7 @@ class AuthViewModel : ViewModel() {
                 }
                 
             } catch (e: Exception) {
+                android.util.Log.e("AuthViewModel", "Network error occurred", e)
                 _authState.value = _authState.value.copy(
                     isLoading = false,
                     error = "网络错误: ${e.message}"
@@ -107,44 +112,62 @@ class AuthViewModel : ViewModel() {
     }
 }
 
-// TODO: 实现 API 服务
+// API 服务
 class AuthApiService {
+    private val baseUrl = "http://localhost:8001/api/v1/"
+    private val retrofit = retrofit2.Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
+        .build()
+    
+    private val api = retrofit.create(AuthApi::class.java)
+    
     suspend fun googleSignIn(idToken: String): retrofit2.Response<LoginResponse> {
-        // 调用后端 API
-        TODO("实现 Google 登录 API 调用")
+        val request = GoogleSignInRequest(idToken)
+        return api.googleSignIn(request)
     }
     
     suspend fun getCurrentUser(): retrofit2.Response<User> {
-        // 获取当前用户信息
-        TODO("实现获取用户信息 API 调用")
+        val token = TokenManager.getToken()
+        return api.getCurrentUser("Bearer $token")
     }
 }
 
+interface AuthApi {
+    @retrofit2.http.POST("auth/google")
+    suspend fun googleSignIn(@retrofit2.http.Body request: GoogleSignInRequest): retrofit2.Response<LoginResponse>
+    
+    @retrofit2.http.GET("auth/me")  
+    suspend fun getCurrentUser(@retrofit2.http.Header("Authorization") token: String): retrofit2.Response<User>
+}
+
+data class GoogleSignInRequest(
+    val id_token: String
+)
+
 data class LoginResponse(
-    val accessToken: String,
-    val tokenType: String,
+    val access_token: String,
+    val token_type: String,
     val user: User
 )
 
 // TODO: 实现 Token 管理
 object TokenManager {
+    private var token: String? = null
+    
     fun saveToken(token: String) {
-        // 使用 EncryptedSharedPreferences 保存
-        TODO("实现 Token 保存")
+        this.token = token
     }
     
     fun getToken(): String? {
-        // 从 EncryptedSharedPreferences 获取
-        TODO("实现 Token 获取")
+        return token
     }
     
     fun clearToken() {
-        // 清除保存的 Token
-        TODO("实现 Token 清除")
+        token = null
     }
     
     fun isTokenValid(token: String): Boolean {
-        // 检查 Token 是否过期
-        TODO("实现 Token 验证")
+        return token.isNotEmpty()
     }
 }

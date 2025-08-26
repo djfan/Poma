@@ -38,5 +38,5 @@ echo "   API 文档: http://localhost:8001/docs"
 echo "   按 Ctrl+C 停止服务器"
 echo ""
 
-# 使用 8001 端口避免冲突
-uvicorn app.main:app --reload --port 8001
+# 使用 8001 端口，监听所有网络接口以支持手机连接
+uvicorn app.main:app --reload --port 8001 --host 0.0.0.0

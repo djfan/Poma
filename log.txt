@@ -100,3 +100,121 @@
 - 创建主控制脚本 ./poma 统一管理所有开发命令
 - 支持 dev 模式、状态检查、清理等功能
 - 更新文档以反映新的项目结构
+- Android 构建失败：缺少必要的资源文件（图标、样式、XML文件）
+- 用户询问数据库选择和 Android 开发环境要求
+
+### 17:30 - Android 资源文件修复和构建成功
+- 创建完整的 Android 资源文件：
+  - 主题和颜色定义：themes.xml, colors.xml
+  - 应用图标：ic_launcher.png (所有密度)，ic_launcher_round.png
+  - XML 配置文件：data_extraction_rules.xml, backup_rules.xml
+  - 界面图标：ic_bookmark.xml
+- 解决 Material3 主题兼容性问题，使用标准 Android Material 主题
+- Android 构建成功：生成 10M 的 Debug APK
+- 创建 memory/ 目录用于存储压缩摘要文件
+- 用户询问 Android 资源文件的作用和为什么最初没有创建
+
+### 18:00 - Android 应用网络连接和 API 实现
+- 诊断 Google 登录问题：手机无法连接 localhost:8001
+- 获取电脑实际 IP：192.168.1.41，修改 Android API 配置
+- 实现完整的 AuthApiService 类：
+  - 配置 Retrofit 连接到 http://192.168.1.41:8001/api/v1/
+  - 实现 GoogleSignIn 和 getCurrentUser API 调用
+  - 创建 AuthApi 接口和相关数据类
+- 实现 TokenManager：简化版本用于开发测试
+- 修复字段名问题：access_token vs accessToken
+- 添加网络安全配置：允许 HTTP 连接到本地 IP
+- 扫描并修复所有关键 TODO 项目
+- 创建 Android 测试指南文档：详细的设备设置和测试流程
+- 应用重新构建成功，准备手机端测试
+
+## 2025-08-26 - Google 登录调试和修复
+
+### 01:30 - Google 登录首次测试失败
+- 测试环境设置：后端运行在 0.0.0.0:8001，手机连接同网络
+- Google 登录 UI 正常工作，但点击后直接返回登录界面
+- 添加调试日志跟踪 Google Sign-In 流程
+- 版本更新：v1.0.1-debug (Build 2) - Debug Logs
+
+### 02:00 - 深度调试 Google OAuth 流程
+- 发现 Google Sign-In 返回 RESULT_CANCELED (resultCode = 0)
+- 日志显示选择 Google 账户后未获取到 ID Token
+- 排除 Firebase 依赖问题，确认使用纯 Google OAuth 集成
+- 发现问题可能在于 OAuth Client ID 配置错误
+
+### 02:30 - 硬编码 OAuth Client ID 临时测试
+- 将 OAuth Client ID 硬编码到应用中进行测试
+- 版本更新：v1.0.2-debug (Build 3) - Hardcoded Client ID
+- Google Sign-In 仍然返回 RESULT_CANCELED
+- 确认问题不在于 BuildConfig 配置
+
+### 03:00 - OAuth 配置深度分析
+- 研究发现使用 Android Client ID 进行 requestIdToken() 可能有问题
+- Google OAuth 文档显示需要 Web Client ID 用于 ID Token 生成
+- 版本更新进度：v1.0.3-debug → v1.0.4-debug → v1.0.5-debug → v1.0.6-debug
+- 通过 adb logcat 确认 Google Sign-In UI 工作正常但回调失败
+
+### 04:00 - 发现根本原因并实施修复
+- 确认问题：Android Client ID 不能用于 requestIdToken()
+- 解决方案：必须使用 Web Application Client ID
+- 用户创建新的 Web Client ID: 882585452174-e4ehsoof2jm9ccs3olh16t5qk9mtokkq.apps.googleusercontent.com
+- 实施修复：替换 LoginScreen.kt 中的 Client ID
+- 版本更新：v1.0.7-debug (Build 8) - Web Client ID
+- 应用重新构建并安装成功，等待测试结果
+
+### 技术要点总结
+- Google OAuth 集成的关键：Web Client ID 用于 requestIdToken()，Android Client ID 仅用于基本信息获取
+- 调试方法：通过 adb logcat 跟踪 Google Sign-In Activity 生命周期
+- 版本管理：每次重要修改都更新版本号以便跟踪测试进度
+
+### 04:45 - Web Client ID配置验证失败
+- 使用Web Client ID后仍然返回RESULT_CANCELED (错误代码12501)
+- 日志确认按钮点击和Google Sign-In流程正常启动
+- 版本更新：v1.0.8-debug (Build 9) - Error Level Logs
+- 添加ERROR级别日志成功捕获关键调试信息
+
+### 问题分析结论
+- **不是Client ID类型问题**: 使用Web Client ID仍然失败
+- **可能是配置问题**: RESULT_CANCELED (12501)通常表示OAuth配置错误
+- **需要检查**: Android Client ID的SHA-1指纹配置，可能需要同时配置Android和Web两个Client ID
+- **关键发现**: Google Sign-In UI工作正常，问题在于OAuth验证失败
+
+### 05:00 - google-services.json测试失败，回到正确调试路径
+- 添加google-services.json文件无效果，仍然RESULT_CANCELED
+- 确认不需要google-services.json（纯Google Sign-In SDK）
+- 版本更新：v1.0.9-debug (Build 10) - google-services.json
+- 删除不必要的google-services.json文件
+
+### 核心问题定位
+RESULT_CANCELED (错误代码12501) = Google Cloud Console OAuth配置错误
+- 需要验证Android OAuth客户端的SHA-1指纹配置
+- 需要验证应用包名匹配
+- 问题与代码无关，纯粹是Google Console配置问题
+
+### 14:20 - 🎉 Google Sign-In 完全修复成功！
+- **根本原因发现**: OCR识别错误导致Web Client ID配置错误
+- **正确配置**: `882585452174-e4ehsoof2jm9ccs3olh16t5**g**k9mtokkq.apps.googleusercontent.com` (而非5q)
+- **网络连接解决**: 使用ADB端口转发 `adb reverse tcp:8001 tcp:8001` + localhost配置
+- **后端配置修复**: 更新环境变量使用正确的Web Client ID
+- **版本**: v1.0.11-debug (Build 12) - ADB Port Forwarding
+
+### 完整的端到端Google登录流程测试成功 ✅
+1. ✅ **Google Sign-In**: 成功获取用户账号 `proidea1992@gmail.com` 和ID Token
+2. ✅ **网络通信**: Android → localhost:8001 → 后端 (ADB端口转发)
+3. ✅ **后端验证**: Google ID Token验证成功 `200 OK`
+4. ✅ **JWT生成**: 后端成功生成并返回访问令牌
+5. ✅ **状态管理**: Android成功更新 `isLoggedIn=true`
+6. ✅ **UI跳转**: 登录成功后正确跳转到主页面
+
+### 关键技术解决方案总结
+- **Google OAuth配置**: Android + Web两个Client ID正确配置
+- **网络架构**: ADB端口转发解决开发环境连接问题
+- **安全实现**: 纯Google OAuth (无Firebase) + JWT Token认证
+- **调试方法**: adb logcat + 后端日志 + 版本号跟踪
+
+### 里程碑成就 🏆
+**第一个完整功能模块完成**: 用户认证系统
+- Google OAuth 2.0 集成 ✅
+- 前后端通信 ✅  
+- JWT Token管理 ✅
+- 状态管理和路由 ✅

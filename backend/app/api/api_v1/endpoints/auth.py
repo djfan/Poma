@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from app.core.config import settings
-import jwt
+import jwt as pyjwt
 from datetime import datetime, timedelta
 
 router = APIRouter()
@@ -101,5 +101,5 @@ def create_access_token(user_id: int) -> str:
         "exp": expire,
         "type": "access"
     }
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    encoded_jwt = pyjwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt

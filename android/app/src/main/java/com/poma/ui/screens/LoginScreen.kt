@@ -38,28 +38,43 @@ fun LoginScreen(
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
                 val account = task.getResult(ApiException::class.java)
+                android.util.Log.d("GoogleSignIn", "Account: ${account.email}")
                 account.idToken?.let { idToken ->
+                    android.util.Log.d("GoogleSignIn", "ID Token received: ${idToken.take(50)}...")
                     authViewModel.signInWithGoogle(idToken)
+                } ?: run {
+                    android.util.Log.e("GoogleSignIn", "ID Token is null!")
+                    authViewModel.setError("ID Token 获取失败")
                 }
             } catch (e: ApiException) {
                 // 处理错误
-                authViewModel.setError("Google 登录失败: ${e.message}")
+                android.util.Log.e("GoogleSignIn", "Google Sign-In failed with status code: ${e.statusCode}", e)
+                authViewModel.setError("Google 登录失败: ${e.statusCode} - ${e.message}")
             }
+        } else {
+            android.util.Log.w("GoogleSignIn", "Result not OK: ${result.resultCode}")
         }
     }
     
     // 配置 Google Sign-In
     val gso = remember {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("882585452174-msrfafbhd66gmsermrjl46loa9ioeet6.apps.googleusercontent.com")
+            .requestIdToken("882585452174-e4ehsoof2jm9ccs3olh16t5gk9mtokkq.apps.googleusercontent.com")
             .requestEmail()
+            .requestProfile()
             .build()
     }
     
     val googleSignInClient = remember { GoogleSignIn.getClient(context, gso) }
     
+    // 测试日志
+    LaunchedEffect(Unit) {
+        android.util.Log.e("LoginScreen", "=== POMA LoginScreen composed! ===")
+    }
+    
     // 监听登录状态，成功后跳转
     LaunchedEffect(authState.isLoggedIn) {
+        android.util.Log.d("LoginScreen", "Auth state changed: isLoggedIn=${authState.isLoggedIn}")
         if (authState.isLoggedIn) {
             navController.navigate("home") {
                 popUpTo("login") { inclusive = true }
@@ -114,6 +129,7 @@ fun LoginScreen(
         // Google 登录按钮
         Button(
             onClick = {
+                android.util.Log.e("LoginScreen", "=== POMA Google Sign-In button clicked! ===")
                 val signInIntent = googleSignInClient.signInIntent
                 launcher.launch(signInIntent)
             },
@@ -189,6 +205,15 @@ fun LoginScreen(
             style = MaterialTheme.typography.labelSmall,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+        
+        Text(
+            text = "v1.0.11-debug (Build 12) - ADB Port Forwarding",
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.outline
         )
     }
 }

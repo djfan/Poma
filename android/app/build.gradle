@@ -11,8 +11,8 @@ android {
         applicationId "com.poma"
         minSdk 26  // Android 8.0 - 支持现代API
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode 12
+        versionName "1.0.11-debug"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -93,4 +93,4 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
 
-apply plugin: 'com.google.gms.google-services'
+// apply plugin: 'com.google.gms.google-services'  // 不需要Firebase
