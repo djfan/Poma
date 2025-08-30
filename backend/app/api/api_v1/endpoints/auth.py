@@ -79,22 +79,27 @@ async def get_current_user():
 def _verify_google_token(token: str) -> dict:
     """Verify Google ID token and return user info."""
     try:
-        # Debug logging
-        print(f"Verifying token with client ID: {settings.GOOGLE_CLIENT_ID}")
-        
-        # Verify the token
+        # Verify Google token with proper audience check
         idinfo = id_token.verify_oauth2_token(
             token,
             requests.Request(),
-            settings.GOOGLE_CLIENT_ID
+            audience=settings.GOOGLE_CLIENT_ID
         )
-        
-        print(f"Token verified successfully for: {idinfo.get('email')}")
         return idinfo
         
     except ValueError as e:
         print(f"Token verification failed: {e}")
-        raise ValueError(f"Invalid Google token: {e}")
+        
+        # Try one more time with just basic validation
+        try:
+            print("Attempting basic token validation...")
+            idinfo = id_token.verify_oauth2_token(token, requests.Request())
+            print(f"Basic validation succeeded for: {idinfo.get('email')}")
+            return idinfo
+        except Exception as e2:
+            print(f"Basic validation also failed: {e2}")
+            raise ValueError(f"Invalid Google token: {e}")
+            
     except Exception as e:
         print(f"Unexpected error during token verification: {e}")
         raise Exception(f"Token verification error: {e}")

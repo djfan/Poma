@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: poma-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: PYTHONPATH
+        value: /opt/render/project/src/backend
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        value: 882585452174-e4ehsoof2jm9ccs3olh16t5gk9mtokkq.apps.googleusercontent.com
+      # Add these manually in Render dashboard:
+      # - OPENAI_API_KEY (optional)
+      # - SPOTIFY_CLIENT_ID (optional) 
+      # - SPOTIFY_CLIENT_SECRET (optional)
+
+databases:
+  - name: poma-postgres
+    plan: free
+    databaseName: poma_production
+    user: poma_user
