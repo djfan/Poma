@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bluetooth
-import androidx.compose.material.icons.filled.BluetoothConnected
-import androidx.compose.material.icons.filled.Headset
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -99,7 +96,7 @@ fun BluetoothDevicesCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        Icons.Default.Bluetooth,
+                        Icons.Default.Settings,
                         contentDescription = "Bluetooth",
                         tint = if (bluetoothState.isBluetoothEnabled) 
                             MaterialTheme.colorScheme.primary 
@@ -241,8 +238,8 @@ fun DeviceItem(
     ) {
         Icon(
             imageVector = when (device.deviceType) {
-                DeviceType.PIXEL_BUDS_PRO, DeviceType.PIXEL_BUDS, DeviceType.HEADPHONES -> Icons.Default.Headset
-                else -> Icons.Default.Bluetooth
+                DeviceType.PIXEL_BUDS_PRO, DeviceType.PIXEL_BUDS, DeviceType.HEADPHONES -> Icons.Default.PlayArrow
+                else -> Icons.Default.Settings
             },
             contentDescription = null,
             tint = when {
@@ -282,7 +279,7 @@ fun DeviceItem(
         
         if (isConnected) {
             Icon(
-                Icons.Default.BluetoothConnected,
+                Icons.Default.CheckCircle,
                 contentDescription = "Connected",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(16.dp)
@@ -307,7 +304,7 @@ fun HeadphoneControlsCard(bluetoothState: com.poma.viewmodel.BluetoothState) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    Icons.Default.Headset,
+                    Icons.Default.PlayArrow,
                     contentDescription = "Headphone Controls",
                     tint = if (hasPixelBudsProConnected) 
                         Color(0xFF1ED760) 

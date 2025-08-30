@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <!-- Exclude sensitive data -->
-    <exclude domain="sharedpref" path="device_prefs.xml"/>
-    <!-- Include app data -->
+    <!-- Include all application data -->
     <include domain="file" path="."/>
+    <include domain="sharedpref" path="."/>
 </full-backup-content>
