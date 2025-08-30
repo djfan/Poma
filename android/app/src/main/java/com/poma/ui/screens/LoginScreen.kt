@@ -189,7 +189,7 @@ fontWeight = FontWeight.Normal
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "v2.9.1-stable-spotify-colors (Build 32) - Stable Spotify Colors + Logo",
+            text = "v2.9.8-production-bluetooth (Build 40) - Production Ready + Bluetooth",
             style = MaterialTheme.typography.labelSmall.copy(
 fontWeight = FontWeight.Normal
             ),
