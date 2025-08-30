@@ -78,11 +78,26 @@ async def get_current_user():
 # Private helper functions - Flat is better than nested
 def _verify_google_token(token: str) -> dict:
     """Verify Google ID token and return user info."""
-    return id_token.verify_oauth2_token(
-        token,
-        requests.Request(),
-        settings.GOOGLE_CLIENT_ID
-    )
+    try:
+        # Debug logging
+        print(f"Verifying token with client ID: {settings.GOOGLE_CLIENT_ID}")
+        
+        # Verify the token
+        idinfo = id_token.verify_oauth2_token(
+            token,
+            requests.Request(),
+            settings.GOOGLE_CLIENT_ID
+        )
+        
+        print(f"Token verified successfully for: {idinfo.get('email')}")
+        return idinfo
+        
+    except ValueError as e:
+        print(f"Token verification failed: {e}")
+        raise ValueError(f"Invalid Google token: {e}")
+    except Exception as e:
+        print(f"Unexpected error during token verification: {e}")
+        raise Exception(f"Token verification error: {e}")
 
 
 def _get_or_create_user(google_info: dict, db: Session) -> User:
