@@ -11,8 +11,8 @@ android {
         applicationId "com.poma"
         minSdk 26  // Android 8.0 - 支持现代API
         targetSdk 34
-        versionCode 38
-        versionName "v2.9.7-quick-bookmark"
+        versionCode 40
+        versionName "v2.9.8-production-bluetooth"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
