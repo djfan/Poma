@@ -1,34 +1,36 @@
-from pydantic_settings import BaseSettings
+"""Configuration for Poma API.
+
+Explicit is better than implicit.
+Simple is better than complex.
+"""
 from typing import Optional
 
+from pydantic_settings import BaseSettings
+
+
 class Settings(BaseSettings):
-    # 数据库配置
-    DATABASE_URL: str = "postgresql://user:password@localhost/poma"
+    """Application settings loaded from environment."""
     
-    # Redis 配置
-    REDIS_URL: str = "redis://localhost:6379"
-    
-    # JWT 配置
-    SECRET_KEY: str = "your-secret-key-here"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-    
-    # Spotify API 配置
-    SPOTIFY_CLIENT_ID: Optional[str] = None
-    SPOTIFY_CLIENT_SECRET: Optional[str] = None
-    SPOTIFY_REDIRECT_URI: str = "http://localhost:8000/api/v1/auth/spotify/callback"
-    
-    # OpenAI 配置
-    OPENAI_API_KEY: Optional[str] = None
-    
-    # Google OAuth 配置
-    GOOGLE_CLIENT_ID: Optional[str] = None
-    
-    # 应用配置
+    # Core app settings
     DEBUG: bool = True
     API_V1_STR: str = "/api/v1"
     
+    # Security
+    SECRET_KEY: str = "dev-secret-key-change-in-production"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
+    
+    # External services
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    SPOTIFY_CLIENT_ID: Optional[str] = None
+    SPOTIFY_CLIENT_SECRET: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
+    
+    # Database (future)
+    DATABASE_URL: str = "sqlite:///./poma.db"  # Simple default
+    
     class Config:
         env_file = ".env"
+
 
 settings = Settings()

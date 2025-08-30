@@ -1,9 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Float, BigInteger
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from app.core.database import Base
 
 class Bookmark(Base):
     __tablename__ = "bookmarks"
@@ -17,9 +16,14 @@ class Bookmark(Base):
     spotify_episode_id = Column(String, nullable=True)
     podcast_cover_url = Column(String, nullable=True)
     
+    # MediaSession深度链接信息
+    media_id = Column(String, nullable=True)      # 如 "spotify:episode:7v2NyyYIsI9xzqZ0qL21w0"
+    source_app_package = Column(String, nullable=True)  # 如 "com.spotify.music"
+    album_art_uri = Column(String, nullable=True)  # MediaSession封面图URI
+    
     # 时间戳信息
-    timestamp_ms = Column(Integer, nullable=False)  # 毫秒级时间戳
-    duration_ms = Column(Integer, nullable=True)    # 总时长
+    timestamp_ms = Column(BigInteger, nullable=False)  # 毫秒级时间戳
+    duration_ms = Column(BigInteger, nullable=True)    # 总时长
     
     # 笔记内容
     audio_file_path = Column(String, nullable=True)  # 语音文件路径

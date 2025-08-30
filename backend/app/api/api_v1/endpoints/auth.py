@@ -1,105 +1,128 @@
-from fastapi import APIRouter, HTTPException, Depends
-from pydantic import BaseModel
-from google.oauth2 import id_token
-from google.auth.transport import requests
-from app.core.config import settings
-import jwt as pyjwt
+"""Authentication endpoints for Poma API.
+
+Simple is better than complex.
+Readability counts.
+"""
 from datetime import datetime, timedelta
+from typing import Optional
+
+from fastapi import APIRouter, HTTPException, Depends
+from google.auth.transport import requests
+from google.oauth2 import id_token
+import jwt as pyjwt
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from app.core.config import settings
+from app.core.database import get_db
+from app.models.user import User
 
 router = APIRouter()
 
-class UserCreate(BaseModel):
-    email: str
-    password: str
 
-class UserLogin(BaseModel):
-    email: str
-    password: str
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
+# Data Models - Keep it simple
 class GoogleSignInRequest(BaseModel):
     id_token: str
+
 
 class UserResponse(BaseModel):
     id: int
     email: str
     name: str
-    avatar_url: str = None
+    avatar_url: Optional[str] = None
+
 
 class LoginResponse(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = "bearer"
     user: UserResponse
 
-@router.post("/register", response_model=Token)
-async def register(user: UserCreate):
-    # TODO: 实现用户注册逻辑
-    return {"access_token": "fake_token", "token_type": "bearer"}
-
-@router.post("/login", response_model=Token)
-async def login(user_credentials: UserLogin):
-    # TODO: 实现用户登录逻辑
-    return {"access_token": "fake_token", "token_type": "bearer"}
+# Future: Email/password authentication will go here
+# For now, we only support Google OAuth
 
 @router.post("/google", response_model=LoginResponse)
-async def google_sign_in(request: GoogleSignInRequest):
-    """Google OAuth 登录"""
+async def google_sign_in(request: GoogleSignInRequest, db: Session = Depends(get_db)):
+    """Authenticate user with Google OAuth token."""
     try:
-        # 验证 Google ID Token
-        idinfo = id_token.verify_oauth2_token(
-            request.id_token, 
-            requests.Request(), 
-            settings.GOOGLE_CLIENT_ID
-        )
-
-        # 提取用户信息
-        email = idinfo['email']
-        name = idinfo.get('name', '')
-        google_id = idinfo['sub']
-        avatar_url = idinfo.get('picture')
-
-        # TODO: 从数据库获取或创建用户
-        # 暂时使用模拟数据
-        user_data = {
-            "id": 1,
-            "email": email,
-            "name": name,
-            "avatar_url": avatar_url
-        }
+        # Verify Google token and get user info (secure method)
+        user_info = _verify_google_token(request.id_token)
+        user = _get_or_create_user(user_info, db)
         
-        # 生成 JWT Token
-        access_token = create_access_token(user_id=user_data["id"])
+        token = _create_access_token(user.id)
         
         return LoginResponse(
-            access_token=access_token,
-            token_type="bearer",
-            user=UserResponse(**user_data)
+            access_token=token,
+            user=UserResponse(
+                id=user.id,
+                email=user.email,
+                name=user_info.get("name", user.email),
+                avatar_url=user_info.get("picture")
+            )
         )
         
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail="Invalid Google token")
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Internal server error")
+        print(f"Authentication error: {e}")
+        raise HTTPException(status_code=500, detail=f"Authentication failed: {str(e)}")
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user():
-    # TODO: 实现获取当前用户信息
+    """Get current authenticated user info."""
+    # TODO: Extract user from JWT token
     return UserResponse(
-        id=1, 
+        id=1,
         email="test@example.com",
         name="Test User"
     )
 
-def create_access_token(user_id: int) -> str:
-    """生成 JWT Token"""
-    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode = {
+
+# Private helper functions - Flat is better than nested
+def _verify_google_token(token: str) -> dict:
+    """Verify Google ID token and return user info."""
+    return id_token.verify_oauth2_token(
+        token,
+        requests.Request(),
+        settings.GOOGLE_CLIENT_ID
+    )
+
+
+def _get_or_create_user(google_info: dict, db: Session) -> User:
+    """Get existing user or create new one from Google info."""
+    email = google_info["email"]
+    
+    # Check if user already exists
+    user = db.query(User).filter(User.email == email).first()
+    
+    if not user:
+        # Create new user with current User model fields
+        user = User(
+            email=email,
+            is_active=True,
+            hashed_password="google_oauth"  # Placeholder for OAuth users
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        print(f"Created new user: {email} with ID: {user.id}")
+    else:
+        print(f"Existing user: {email} with ID: {user.id}")
+    
+    return user
+
+
+def _create_access_token(user_id: int) -> str:
+    """Create JWT access token for user."""
+    expires = datetime.utcnow() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    
+    payload = {
         "sub": str(user_id),
-        "exp": expire,
+        "exp": expires,
         "type": "access"
     }
-    encoded_jwt = pyjwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-    return encoded_jwt
+    
+    return pyjwt.encode(
+        payload,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
+    )

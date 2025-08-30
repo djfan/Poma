@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from app.core.database import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -19,3 +19,6 @@ class User(Base):
     spotify_access_token = Column(String, nullable=True)
     spotify_refresh_token = Column(String, nullable=True)
     spotify_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    
+    # 关系
+    bookmarks = relationship("Bookmark", back_populates="user")

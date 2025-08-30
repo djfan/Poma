@@ -1,42 +1,30 @@
 #!/bin/bash
+# POMA Backend Start Script
 
-# Poma Backend 一键启动脚本
-# 使用方法：./start-backend.sh
+echo "Starting POMA Backend Server..."
 
-echo "🚀 启动 Poma 后端服务器..."
+cd "$(dirname "$0")/../backend"
 
-# 获取脚本所在目录并进入项目根目录
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-cd "$PROJECT_ROOT/backend"
-
-# 检查虚拟环境是否存在
-if [ ! -d "venv" ]; then
-    echo "📦 虚拟环境不存在，正在创建..."
-    python -m venv venv
-    echo "✅ 虚拟环境创建完成"
+# Check if .env file exists
+if [ ! -f ".env" ]; then
+    echo "Error: .env file not found. Please create it with required environment variables."
+    exit 1
 fi
 
-# 激活虚拟环境
-echo "🔧 激活虚拟环境..."
+# Check if virtual environment exists
+if [ ! -d "venv" ]; then
+    echo "Error: Virtual environment not found. Please run setup first."
+    exit 1
+fi
+
+# Activate virtual environment
 source venv/bin/activate
 
-# 检查依赖是否安装
-echo "📋 检查并安装依赖..."
-pip install -r requirements.txt
+# Check if ADB port forwarding is set up
+echo "Setting up ADB port forwarding..."
+adb forward tcp:8001 tcp:8001
 
-# 检查 .env 文件
-if [ ! -f ".env" ]; then
-    echo "⚠️  .env 文件不存在，请确保已配置环境变量"
-    echo "   参考 .env.example 创建 .env 文件"
-fi
-
-# 启动服务器
-echo "🌐 启动 FastAPI 服务器..."
-echo "   访问地址: http://localhost:8001"
-echo "   API 文档: http://localhost:8001/docs"
-echo "   按 Ctrl+C 停止服务器"
-echo ""
-
-# 使用 8001 端口，监听所有网络接口以支持手机连接
-uvicorn app.main:app --reload --port 8001 --host 0.0.0.0
+# Start the server
+echo "Backend server starting on http://0.0.0.0:8001"
+echo "Android should connect to http://localhost:8001 (via ADB port forwarding)"
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload

@@ -1,0 +1,27 @@
+Big question: 
+first principal: I want to use the app online (70%) and offiline (30% like on plane)
+can it be done at phone system level so that it won't necessary synce and call sportify api all the time every few second
+chanllenges are : connection and fetech play info from sportify app; also data management (local - database)
+
+
+Goal: 
+
+short time
+- online sportify show play episode name and maybe cover image and pod author (i think the timestamp is correct now so i don't think time need to display)
+- sportify auth (if i have to sync with sportify all the time, not sync at my phone operatoing system level)
+
+
+long term
+- Offline capability same as what the app do with network (can call sportify api)
+- UI upgrade pixel nintendo game type of UI and font
+- pixel double tap and pixel bud long press shortcut intergration
+- my bookmark better display and able to edit and delete
+
+
+long long term:
+- android phone but able to use / choose shortcut from other earbud or headset
+- iphone with airpod
+- iphone witn other type of earbud
+- bookmark with AI for summary
+
+maybe more idea to make this app lightwight more flexible more user interact friendly less configure get one thing done and done well. 
