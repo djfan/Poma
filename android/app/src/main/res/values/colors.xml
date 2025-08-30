@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Spotify Brand Colors -->
+    <color name="spotify_green">#FF1ED760</color>
+    <color name="spotify_green_dark">#FF1DB954</color>
+    <color name="spotify_black">#FF121212</color>
+    <color name="spotify_dark_gray">#FF191414</color>
+    <color name="spotify_gray">#FFB3B3B3</color>
+    <color name="spotify_light_gray">#FF535353</color>
+    
+    <!-- Primary App Colors -->
+    <color name="primary">#FF1ED760</color>
+    <color name="primary_variant">#FF1DB954</color>
+    <color name="secondary">#FF1ED760</color>
+    <color name="background">#FF121212</color>
+    <color name="surface">#FF191414</color>
+    <color name="error">#FFCF6679</color>
+    
+    <!-- Text Colors -->
+    <color name="on_primary">#FF000000</color>
+    <color name="on_secondary">#FF000000</color>
+    <color name="on_background">#FFFFFFFF</color>
+    <color name="on_surface">#FFFFFFFF</color>
+    <color name="on_error">#FF000000</color>
+    
+    <!-- Standard Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Legacy Colors (keep for compatibility) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
 </resources>

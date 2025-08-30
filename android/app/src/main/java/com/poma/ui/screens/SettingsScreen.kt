@@ -4,19 +4,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import android.content.Intent
+import android.net.Uri
+import com.poma.viewmodel.SpotifyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    spotifyViewModel: SpotifyViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Text(
-            text = "设置",
+            text = "SETTINGS",
             style = MaterialTheme.typography.headlineMedium
         )
         
@@ -29,14 +37,14 @@ fun SettingsScreen(navController: NavController) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Spotify 集成",
+                    text = "Spotify Integration",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { /* TODO: Spotify 授权 */ }
+                    onClick = { spotifyViewModel.initiateSpotifyConnection() }
                 ) {
-                    Text("连接 Spotify")
+                    Text("Connect Spotify")
                 }
             }
         }
@@ -50,12 +58,12 @@ fun SettingsScreen(navController: NavController) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "硬件集成",
+                    text = "Hardware Integration",
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "• Quick Tap: 背部双击触发\n• Pixel Buds Pro: 长按触发",
+                    text = "• Quick Tap: Double tap back\n• Pixel Buds Pro: Long press trigger",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

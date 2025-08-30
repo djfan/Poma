@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Spotify-inspired Dark Theme -->
     <style name="Theme.Poma" parent="android:Theme.Material.Light.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="android:colorPrimary">@color/purple_500</item>
-        <item name="android:colorPrimaryDark">@color/purple_700</item>
-        <item name="android:colorAccent">@color/teal_200</item>
+        <!-- Spotify Brand Colors -->
+        <item name="android:colorPrimary">@color/spotify_green</item>
+        <item name="android:colorPrimaryDark">@color/spotify_green_dark</item>
+        <item name="android:colorAccent">@color/spotify_green</item>
+        
+        <!-- Background Colors - Force dark -->
+        <item name="android:colorBackground">@color/spotify_black</item>
+        <item name="android:windowBackground">@color/spotify_black</item>
+        
+        <!-- Text Colors - Force light text for dark background -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/spotify_gray</item>
+        <item name="android:textColorHint">@color/spotify_light_gray</item>
+        
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/spotify_black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        
+        <!-- Navigation Bar -->
+        <item name="android:navigationBarColor">@color/spotify_black</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+        
+        <!-- Force dark theme -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+    </style>
+
+    <!-- Typography Styles (system default fonts) -->
+    <style name="TextAppearance.Poma.Headline1" parent="android:TextAppearance.Material.Headline">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="TextAppearance.Poma.Headline2" parent="android:TextAppearance.Material.Headline">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.Poma.Body1" parent="android:TextAppearance.Material.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.Poma.Body2" parent="android:TextAppearance.Material.Body2">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.Poma.Caption" parent="android:TextAppearance.Material.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
     </style>
 </resources>

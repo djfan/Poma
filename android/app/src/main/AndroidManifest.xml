@@ -17,6 +17,9 @@
     <!-- 通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
+    <!-- 媒体会话监听权限 -->
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    
     <!-- Pixel 硬件特性声明 -->
     <uses-feature 
         android:name="android.hardware.sensor.accelerometer" 
@@ -37,29 +40,33 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Poma">
+            android:theme="@style/Theme.Poma"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+            <!-- Spotify OAuth callback -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="poma" android:host="spotify" />
+            </intent-filter>
         </activity>
         
-        <!-- Quick Settings Tile -->
+        
+        <!-- Media Session Listener Service -->
         <service
-            android:name=".service.QuickBookmarkTileService"
-            android:exported="true"
-            android:icon="@drawable/ic_bookmark"
-            android:label="@string/quick_bookmark_tile_label"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            android:name=".service.MediaSessionListenerService"
+            android:label="POMA Media Session Monitor"
+            android:exported="false"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        
-        <!-- Media Session Service -->
-        <service
-            android:name=".service.MediaListenerService"
-            android:exported="false" />
             
     </application>
 
