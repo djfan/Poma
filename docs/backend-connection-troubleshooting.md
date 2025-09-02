@@ -38,8 +38,8 @@ pwd
 cd /Users/djfan/Workspace/Poma/backend
 
 # Set environment variables and start server
-export SPOTIFY_CLIENT_ID=e2b28b37e732415b9bffe4af560c2e12
-export SPOTIFY_CLIENT_SECRET=343a87fdc0a34fb3b497972b80f7bdbd
+export SPOTIFY_CLIENT_ID=your_spotify_client_id
+export SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
