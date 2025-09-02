@@ -18,8 +18,8 @@ def update_api_urls(target_url):
     if target_url == "local":
         base_url = "http://localhost:8001/"
     elif target_url == "cloud":
-        # You'll need to replace this with your actual Render URL after deployment
-        base_url = "https://your-app-name.onrender.com/"
+        # Use the actual Render URL when deployed
+        base_url = "https://poma-backend.onrender.com/"
     else:
         # Custom URL provided
         base_url = target_url if target_url.endswith('/') else target_url + '/'
