@@ -5,7 +5,7 @@ Simple is better than complex.
 """
 from typing import Optional
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
