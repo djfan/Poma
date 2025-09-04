@@ -58,6 +58,54 @@ def _configure_routes(app: FastAPI) -> None:
             "debug_mode": settings.DEBUG,
             "google_client_id": settings.GOOGLE_CLIENT_ID[:20] + "..." if settings.GOOGLE_CLIENT_ID else None
         }
+    
+    @app.post("/debug/create-tables")
+    async def create_tables():
+        """Debug endpoint to create database tables."""
+        from sqlalchemy import create_engine, text
+        from app.core.database import Base
+        from app.models.user import User
+        from app.models.bookmark import Bookmark
+        import os
+        
+        try:
+            # Get database URL
+            database_url = os.environ.get("DATABASE_URL", settings.DATABASE_URL)
+            
+            # Create engine
+            engine = create_engine(database_url, echo=False)
+            
+            # Test connection and get version
+            with engine.connect() as conn:
+                result = conn.execute(text("SELECT version()"))
+                db_version = result.fetchone()[0]
+            
+            # Create all tables
+            Base.metadata.create_all(bind=engine)
+            
+            # Verify tables were created
+            with engine.connect() as conn:
+                result = conn.execute(text("""
+                    SELECT table_name 
+                    FROM information_schema.tables 
+                    WHERE table_schema = 'public'
+                    ORDER BY table_name
+                """))
+                tables = [table[0] for table in result.fetchall()]
+            
+            return {
+                "success": True,
+                "message": "Database tables created successfully",
+                "database_version": db_version[:50],
+                "tables_created": tables
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "message": "Failed to create database tables"
+            }
 
 
 app = create_app()
