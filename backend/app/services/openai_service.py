@@ -4,12 +4,13 @@ import os
 import tempfile
 import subprocess
 from typing import Optional
-from openai import OpenAI
+import openai
 from app.core.config import settings
 
 class OpenAIService:
     def __init__(self):
-        self.client = OpenAI(api_key=settings.OPENAI_API_KEY) if settings.OPENAI_API_KEY else None
+        if settings.OPENAI_API_KEY:
+            openai.api_key = settings.OPENAI_API_KEY
     
     def _convert_to_supported_format(self, input_path: str) -> str:
         """Convert audio file to mp3 format if needed."""
@@ -52,7 +53,7 @@ class OpenAIService:
         Returns:
             Transcribed text or None if transcription fails
         """
-        if not self.client:
+        if not openai.api_key:
             print("OpenAI API key not configured, skipping transcription")
             return None
             
@@ -64,7 +65,7 @@ class OpenAIService:
             # Open the audio file
             with open(converted_path, "rb") as audio_file:
                 # Call Whisper API
-                transcript = self.client.audio.transcriptions.create(
+                transcript = openai.Audio.transcribe(
                     model="whisper-1",
                     file=audio_file,
                     response_format="text"
