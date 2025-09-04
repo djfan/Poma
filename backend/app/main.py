@@ -47,6 +47,17 @@ def _configure_routes(app: FastAPI) -> None:
     @app.get("/health")
     async def health():
         return {"status": "ok"}
+    
+    @app.get("/debug/config")
+    async def debug_config():
+        """Debug endpoint to check configuration."""
+        import os
+        return {
+            "database_url_env": os.environ.get("DATABASE_URL", "NOT_SET"),
+            "database_url_settings": settings.DATABASE_URL[:50] + "..." if len(settings.DATABASE_URL) > 50 else settings.DATABASE_URL,
+            "debug_mode": settings.DEBUG,
+            "google_client_id": settings.GOOGLE_CLIENT_ID[:20] + "..." if settings.GOOGLE_CLIENT_ID else None
+        }
 
 
 app = create_app()
