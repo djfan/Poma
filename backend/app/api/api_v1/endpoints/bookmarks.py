@@ -49,7 +49,7 @@ class BookmarkResponse(BaseModel):
     album_art_uri: Optional[str] = None
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 @router.post("/", response_model=BookmarkResponse)
 async def create_bookmark(
@@ -153,7 +153,7 @@ class SimpleBookmarkTest(BaseModel):
     created_at: datetime
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 @router.get("/test-simple", response_model=SimpleBookmarkTest)
 async def test_simple_bookmark(
