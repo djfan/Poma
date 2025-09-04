@@ -24,6 +24,7 @@ import com.poma.R
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.poma.viewmodel.AuthViewModel
+import com.poma.config.ApiConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +34,14 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val authState by authViewModel.authState.collectAsState()
+    
+    // Initialize ApiConfig
+    LaunchedEffect(Unit) {
+        ApiConfig.init(context)
+    }
+    
+    // Backend selection state
+    var isUsingLocalBackend by remember { mutableStateOf(ApiConfig.isUsingLocalBackend()) }
     
     // Google Sign-In launcher
     val launcher = rememberLauncherForActivityResult(
@@ -120,6 +129,78 @@ fontWeight = FontWeight.Normal
         )
         
         Spacer(modifier = Modifier.height(48.dp))
+        
+        // Backend selection
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = androidx.compose.ui.graphics.Color(0xFF2A2A2A) // Dark gray
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Backend Environment",
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
+                    color = androidx.compose.ui.graphics.Color.White
+                )
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Local backend button
+                    FilterChip(
+                        onClick = {
+                            isUsingLocalBackend = true
+                            ApiConfig.setBackendType(true)
+                            android.util.Log.d("LoginScreen", "Switched to Local backend")
+                        },
+                        label = { Text("Local Dev") },
+                        selected = isUsingLocalBackend,
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = androidx.compose.ui.graphics.Color(0xFF1ED760),
+                            selectedLabelColor = androidx.compose.ui.graphics.Color.Black
+                        )
+                    )
+                    
+                    // Cloud backend button
+                    FilterChip(
+                        onClick = {
+                            isUsingLocalBackend = false
+                            ApiConfig.setBackendType(false)
+                            android.util.Log.d("LoginScreen", "Switched to Cloud backend")
+                        },
+                        label = { Text("Cloud Prod") },
+                        selected = !isUsingLocalBackend,
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = androidx.compose.ui.graphics.Color(0xFF1ED760),
+                            selectedLabelColor = androidx.compose.ui.graphics.Color.Black
+                        )
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = if (isUsingLocalBackend) "http://localhost:8001/" else "https://poma-2sxi.onrender.com/",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = androidx.compose.ui.graphics.Color(0xFFB3B3B3),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
         
         // Google Sign-In button
         Button(

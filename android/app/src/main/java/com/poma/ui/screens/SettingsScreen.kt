@@ -73,6 +73,11 @@ fun SettingsScreen(
         item {
             SpotifyIntegrationCard(spotifyViewModel = spotifyViewModel)
         }
+        
+        // Backend Configuration (Developer Options)
+        item {
+            BackendConfigCard()
+        }
     }
 }
 
@@ -546,74 +551,112 @@ fun SpotifyIntegrationCard(spotifyViewModel: SpotifyViewModel) {
                 Text("Connect Spotify Account")
             }
         }
-        
-        // Developer Options - Backend Switching
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
+    }
+}
+
+@Composable
+fun BackendConfigCard() {
+    var isUsingLocal by remember { mutableStateOf(com.poma.config.ApiConfig.isUsingLocalBackend()) }
+    
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-            var isUsingLocal by remember { mutableStateOf(com.poma.config.ApiConfig.isUsingLocalBackend()) }
-            
-            Column(
-                modifier = Modifier.padding(16.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
+                Icon(
+                    Icons.Default.Build,
+                    contentDescription = "Backend Config",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Backend Configuration",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Warning card for logged-in users
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(12.dp)
                 ) {
-                    Icon(
-                        Icons.Default.Build,
-                        contentDescription = "Backend Config",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Backend Configuration",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
+                        text = "⚠️ Backend switching after login",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Medium
+                        ),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "For best experience, choose backend before logging in. Switching after login will clear your session.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
-                Spacer(modifier = Modifier.height(12.dp))
-                
-                Text(
-                    text = "Current: ${if (isUsingLocal) "Local Development" else "Cloud Production"}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                
-                Spacer(modifier = Modifier.height(12.dp))
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Text(
+                text = "Current: ${if (isUsingLocal) "Local Development" else "Cloud Production"}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Text(
+                text = com.poma.config.ApiConfig.getCurrentBackendDescription(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        com.poma.config.ApiConfig.switchToLocal()
+                        isUsingLocal = true
+                        android.util.Log.d("SettingsScreen", "Switched to Local backend from Settings")
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = if (isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
+                    )
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            com.poma.config.ApiConfig.switchToLocal()
-                            isUsingLocal = true
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = if (isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
-                        )
-                    ) {
-                        Text("Local Dev", color = if (isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
-                    }
-                    
-                    OutlinedButton(
-                        onClick = {
-                            com.poma.config.ApiConfig.switchToCloud()
-                            isUsingLocal = false
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = if (!isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
-                        )
-                    ) {
-                        Text("Cloud Prod", color = if (!isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
-                    }
+                    Text("Local Dev", color = if (isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
+                }
+                
+                OutlinedButton(
+                    onClick = {
+                        com.poma.config.ApiConfig.switchToCloud()
+                        isUsingLocal = false
+                        android.util.Log.d("SettingsScreen", "Switched to Cloud backend from Settings")
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = if (!isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
+                    )
+                ) {
+                    Text("Cloud Prod", color = if (!isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
                 }
             }
         }
