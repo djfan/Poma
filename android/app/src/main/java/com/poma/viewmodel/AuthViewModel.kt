@@ -137,11 +137,12 @@ class AuthViewModel : ViewModel() {
 
 // API 服务
 class AuthApiService {
-    private val baseUrl = "http://localhost:8001/api/v1/"
-    private val retrofit = retrofit2.Retrofit.Builder()
-        .baseUrl(baseUrl)
+    private fun createRetrofit() = retrofit2.Retrofit.Builder()
+        .baseUrl(com.poma.config.ApiConfig.getApiV1Url())
         .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
         .build()
+    
+    private val retrofit get() = createRetrofit()
     
     private val api = retrofit.create(AuthApi::class.java)
     

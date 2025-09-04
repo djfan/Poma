@@ -43,13 +43,12 @@ class PlaybackViewModel : ViewModel() {
     val playbackState: StateFlow<PlaybackState> = _playbackState.asStateFlow()
     
     // API client
-    private val apiService: PlaybackApi by lazy {
-        Retrofit.Builder()
-            .baseUrl("http://localhost:8001/")
+    private val apiService: PlaybackApi 
+        get() = Retrofit.Builder()
+            .baseUrl(com.poma.config.ApiConfig.getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PlaybackApi::class.java)
-    }
     
     companion object {
         private const val TAG = "PlaybackViewModel"

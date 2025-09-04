@@ -29,6 +29,9 @@ class MainActivity : ComponentActivity() {
         // 初始化 TokenManager
         TokenManager.init(this)
         
+        // 初始化 ApiConfig
+        com.poma.config.ApiConfig.init(this)
+        
         // Handle Spotify OAuth callback
         handleSpotifyIntent(intent)
         

@@ -61,13 +61,12 @@ class BookmarksViewModel : ViewModel() {
     val bookmarksState: StateFlow<BookmarksState> = _bookmarksState.asStateFlow()
     
     // API client
-    private val apiService: BookmarksApi by lazy {
-        Retrofit.Builder()
-            .baseUrl("http://localhost:8001/")
+    private val apiService: BookmarksApi 
+        get() = Retrofit.Builder()
+            .baseUrl(com.poma.config.ApiConfig.getBaseUrl())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(BookmarksApi::class.java)
-    }
     
     companion object {
         private const val TAG = "BookmarksViewModel"

@@ -34,7 +34,7 @@ class BookmarkResponse(BaseModel):
     id: int
     podcast_name: str
     episode_name: str
-    timestamp_ms: int
+    timestamp_ms: int  # This should handle large values
     duration_ms: Optional[int] = None
     spotify_episode_id: Optional[str] = None
     podcast_cover_url: Optional[str] = None
@@ -122,7 +122,52 @@ async def get_current_playback():
             "spotify_available": False
         }
 
-@router.get("/", response_model=List[BookmarkResponse])
+@router.get("/debug")
+async def debug_bookmarks(
+    db: Session = Depends(get_db)
+):
+    """Debug endpoint to return raw bookmark data."""
+    bookmarks = db.query(Bookmark).filter(
+        Bookmark.user_id == 2
+    ).limit(1).all()
+    
+    # Convert to dict manually to see what we have
+    result = []
+    for bookmark in bookmarks:
+        data = {}
+        for column in bookmark.__table__.columns:
+            value = getattr(bookmark, column.name)
+            if value is None:
+                data[column.name] = None
+            else:
+                data[column.name] = str(value)
+        result.append(data)
+    
+    return {"debug": True, "count": len(result), "data": result}
+
+class SimpleBookmarkTest(BaseModel):
+    id: int
+    podcast_name: str
+    episode_name: str
+    timestamp_ms: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+@router.get("/test-simple", response_model=SimpleBookmarkTest)
+async def test_simple_bookmark(
+    db: Session = Depends(get_db)
+):
+    """Test pydantic conversion with minimal fields."""
+    bookmark = db.query(Bookmark).filter(
+        Bookmark.user_id == 2
+    ).first()
+    if not bookmark:
+        raise HTTPException(status_code=404, detail="No bookmarks found")
+    return bookmark
+
+@router.get("/")
 async def get_bookmarks(
     skip: int = 0, 
     limit: int = 100, 
@@ -133,7 +178,29 @@ async def get_bookmarks(
     bookmarks = db.query(Bookmark).filter(
         Bookmark.user_id == current_user_id
     ).offset(skip).limit(limit).all()
-    return bookmarks
+    
+    # Manually convert to dict to avoid pydantic validation issues
+    result = []
+    for bookmark in bookmarks:
+        result.append({
+            "id": bookmark.id,
+            "podcast_name": bookmark.podcast_name,
+            "episode_name": bookmark.episode_name,
+            "timestamp_ms": bookmark.timestamp_ms,
+            "duration_ms": bookmark.duration_ms,
+            "spotify_episode_id": bookmark.spotify_episode_id,
+            "podcast_cover_url": bookmark.podcast_cover_url,
+            "audio_file_path": bookmark.audio_file_path,
+            "transcript_text": bookmark.transcript_text,
+            "user_note": bookmark.user_note,
+            "ai_summary": bookmark.ai_summary,
+            "created_at": bookmark.created_at.isoformat() if bookmark.created_at else None,
+            "media_id": bookmark.media_id,
+            "source_app_package": bookmark.source_app_package,
+            "album_art_uri": bookmark.album_art_uri
+        })
+    
+    return result
 
 @router.get("/{bookmark_id}", response_model=BookmarkResponse)
 async def get_bookmark(bookmark_id: int, db: Session = Depends(get_db)):

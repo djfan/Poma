@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Release Configuration -->
+    <bool name="debug_mode">false</bool>
+    <bool name="debug_use_local_backend">false</bool>
+</resources>

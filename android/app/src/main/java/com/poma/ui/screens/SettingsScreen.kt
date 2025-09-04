@@ -546,5 +546,76 @@ fun SpotifyIntegrationCard(spotifyViewModel: SpotifyViewModel) {
                 Text("Connect Spotify Account")
             }
         }
+        
+        // Developer Options - Backend Switching
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            var isUsingLocal by remember { mutableStateOf(com.poma.config.ApiConfig.isUsingLocalBackend()) }
+            
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Default.Build,
+                        contentDescription = "Backend Config",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Backend Configuration",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                Text(
+                    text = "Current: ${if (isUsingLocal) "Local Development" else "Cloud Production"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            com.poma.config.ApiConfig.switchToLocal()
+                            isUsingLocal = true
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
+                        )
+                    ) {
+                        Text("Local Dev", color = if (isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
+                    }
+                    
+                    OutlinedButton(
+                        onClick = {
+                            com.poma.config.ApiConfig.switchToCloud()
+                            isUsingLocal = false
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (!isUsingLocal) MaterialTheme.colorScheme.primary else Color.Transparent
+                        )
+                    ) {
+                        Text("Cloud Prod", color = if (!isUsingLocal) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary)
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Debug Configuration -->
+    <bool name="debug_mode">true</bool>
+    <bool name="debug_use_local_backend">false</bool>
+    
+    <!-- Backend URLs -->
+    <string name="local_backend_url">http://localhost:8001/</string>
+    <string name="cloud_backend_url">https://poma-2sxi.onrender.com/</string>
+    
+    <!-- Google OAuth -->
+    <string name="google_client_id">882585452174-e4ehsoof2jm9ccs3olh16t5gk9mtokkq.apps.googleusercontent.com</string>
+</resources>

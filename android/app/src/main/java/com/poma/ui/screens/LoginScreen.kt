@@ -63,7 +63,7 @@ fun LoginScreen(
     // Configure Google Sign-In
     val gso = remember {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("882585452174-e4ehsoof2jm9ccs3olh16t5gk9mtokkq.apps.googleusercontent.com")
+            .requestIdToken(context.getString(R.string.google_client_id))
             .requestEmail()
             .requestProfile()
             .build()
@@ -189,7 +189,7 @@ fontWeight = FontWeight.Normal
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "v2.9.8-production-bluetooth (Build 40) - Production Ready + Bluetooth",
+            text = "v3.0.0-production (Build 46) - Cloud Ready",
             style = MaterialTheme.typography.labelSmall.copy(
 fontWeight = FontWeight.Normal
             ),
