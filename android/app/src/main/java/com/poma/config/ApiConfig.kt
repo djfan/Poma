@@ -3,6 +3,7 @@ package com.poma.config
 import android.content.Context
 import android.content.SharedPreferences
 import com.poma.R
+import com.poma.viewmodel.TokenManager
 
 /**
  * API配置管理
@@ -62,6 +63,15 @@ object ApiConfig {
      * @param useLocal true=使用本地后端, false=使用云端后端
      */
     fun setBackendType(useLocal: Boolean) {
+        val currentSetting = isUsingLocalBackend()
+        
+        // Only clear token if backend actually changed
+        if (currentSetting != useLocal) {
+            // Clear existing token when switching backends
+            TokenManager.clearToken()
+            android.util.Log.d("ApiConfig", "Cleared token due to backend switch: ${if(useLocal) "Local" else "Cloud"}")
+        }
+        
         sharedPrefs?.edit()?.putBoolean(KEY_USE_LOCAL_BACKEND, useLocal)?.apply()
     }
     
